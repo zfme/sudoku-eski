@@ -16,8 +16,8 @@ namespace sudoku
         Random rnd = new Random();
         int uretilenSayi = 100;
         int[,] sudokuDizisi = new int[9, 9];
-     
-        bool sayiUygunmu, t;
+      
+        bool sayiUygunmu, sayiUygunmu1;
         public Form1()
         {
             InitializeComponent();
@@ -25,45 +25,65 @@ namespace sudoku
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            string gec = "";
             for (int i = 0; i < 9; i++)
             {
+                int tekrarSayisi = 0;
                 for (int k = 0; k < 9; k++)
                 {
                     do
                     {
                         uretilenSayi = rnd.Next(1, 10);
-                        //MessageBox.Show(uretilenSayi.ToString());
+
                         sayiUygunmu = SatirKontrol(i, k, uretilenSayi);
+                      
                         if (!sayiUygunmu)
                         {
+                        
                             continue;
                         }
-                       
-                        sayiUygunmu = SutunKontrol(i, k, uretilenSayi);
+             
+                        sayiUygunmu= SutunKontrol(i, k, uretilenSayi);
                         if (!sayiUygunmu)
                         {
+                            tekrarSayisi = tekrarSayisi + 1;
+                            if (tekrarSayisi==9)
+                            {
+
+                                Array.Clear(sudokuDizisi, i * 9 + 1, k);
+                                k = 0;
+                                tekrarSayisi = 0;
+                                continue;
+                            }
                             continue;
                         }
-                       
+
                         if (sayiUygunmu)
                         {
-                            listBox1.Items.Add(uretilenSayi);
-                            sudokuDizisi[i, k] = uretilenSayi;
-                            //MessageBox.Show("diziye eklenen" + uretilenSayi.ToString());
+                           // MessageBox.Show(uretilenSayi.ToString());
+                           // listBox1.Items.Add(uretilenSayi);
+                            sudokuDizisi[i, k] = uretilenSayi;                            
+                            gec = gec + "  " + sudokuDizisi[i, k].ToString();
                         }
-                    } while (!sayiUygunmu);
+                      
+                
+                    }
+                    while (!sayiUygunmu);
                 }
-
+                listBox1.Items.Add(gec);
+                gec = "";
 
             }
-            MessageBox.Show("Bitti");
+
+ 
         }
 
         private bool SatirKontrol(int satir, int sutun, int kontrolEdileccekSayi)
         {
             bool donenDeger=true;
-                for (int k = 0; k <= sutun; k++)
+            if (sutun>0)
+            {
+                for (int k = 0; k < sutun; k++)
                 {
                     if (sudokuDizisi[satir, k] == kontrolEdileccekSayi)
                     {
@@ -72,22 +92,27 @@ namespace sudoku
                     }
 
                 }
+                
+            }
+                
             return donenDeger;
 
         }
         private bool SutunKontrol(int satir, int sutun, int kontrolEdileccekSayi)
         {
             bool donenDeger=true;
-                for (int k = 0; k <= satir; k++)
+            if (satir>0)
+            {
+                for (int k = 0; k < satir; k++)
                 {
                     if (sudokuDizisi[k, sutun] == kontrolEdileccekSayi)
                     {
-                        donenDeger = true;
+                        donenDeger = false;
 
                     }
 
-
-                }        
+                }  
+            }
 
             return donenDeger;
         }

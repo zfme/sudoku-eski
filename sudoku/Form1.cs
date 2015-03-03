@@ -14,10 +14,10 @@ namespace sudoku
     {
 
         Random rnd = new Random();
-        int uretilenSayi = 100;
+        int uretilenSayi;
         int[,] sudokuDizisi = new int[9, 9];
-      
-        bool sayiUygunmu, sayiUygunmu1;
+        int tekrarSayisi = 0;
+        bool sayiUygunmu;
         public Form1()
         {
             InitializeComponent();
@@ -28,61 +28,76 @@ namespace sudoku
             string gec = "";
             for (int i = 0; i < 9; i++)
             {
-                int tekrarSayisi = 0;
+            
                 for (int k = 0; k < 9; k++)
-                {
+                {   
+               
                     do
                     {
+                        
                         uretilenSayi = rnd.Next(1, 10);
 
                         sayiUygunmu = SatirKontrol(i, k, uretilenSayi);
                       
                         if (!sayiUygunmu)
                         {
-                        
+                           
                             continue;
                         }
-             
-                        sayiUygunmu= SutunKontrol(i, k, uretilenSayi);
+
+                        sayiUygunmu = SutunKontrol(i, k, uretilenSayi);
                         if (!sayiUygunmu)
                         {
-                            tekrarSayisi = tekrarSayisi + 1;
-                            if (tekrarSayisi==9)
+                            tekrarSayisi++;
+                            if (tekrarSayisi > 100)
                             {
-
-                                Array.Clear(sudokuDizisi, i * 9 + 1, k);
-                                k = 0;
+                                for (int t = 0; t < 9; t++)
+                                {
+                                    sudokuDizisi[i, t] = 0;
+                                    gec = null;
+                                }
                                 tekrarSayisi = 0;
-                                continue;
+                                k = -1;
+                                break;
                             }
                             continue;
                         }
-
+                      
+      
                         if (sayiUygunmu)
                         {
-                           // MessageBox.Show(uretilenSayi.ToString());
-                           // listBox1.Items.Add(uretilenSayi);
-                            sudokuDizisi[i, k] = uretilenSayi;                            
+                            sudokuDizisi[i, k] = uretilenSayi;
                             gec = gec + "  " + sudokuDizisi[i, k].ToString();
                         }
-                      
+                     
                 
                     }
                     while (!sayiUygunmu);
                 }
+                //for (int z = 0; z < 9; z++)
+                //{
+                //    for (int f = 0; f < 9; f++)
+                //    {
+                //        gec = gec + "  " + sudokuDizisi[z,f].ToString();
+                //    }
+                //}
+
                 listBox1.Items.Add(gec);
-                gec = "";
+               gec = "";
 
             }
 
- 
+       
         }
+
+    
+
+  
 
         private bool SatirKontrol(int satir, int sutun, int kontrolEdileccekSayi)
         {
             bool donenDeger=true;
-            if (sutun>0)
-            {
+  
                 for (int k = 0; k < sutun; k++)
                 {
                     if (sudokuDizisi[satir, k] == kontrolEdileccekSayi)
@@ -90,10 +105,7 @@ namespace sudoku
                         donenDeger = false;
 
                     }
-
                 }
-                
-            }
                 
             return donenDeger;
 
